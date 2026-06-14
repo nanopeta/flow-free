@@ -69,7 +69,22 @@ let curLevel, curStageInLevel   // 現在位置
 let N, pairs, paths, grid       // 盤面状態
 let infiniteCount               // ∞モードのクリア数
 let infFixedSize, infFixedNc    // ∞モードの選択サイズ・色数（0=ランダム）
+let COLORS, GLOSS               // 線の色 / クリア演出の縁の光沢色（可変・設定で変化）
+let settings                    // ユーザー設定（localStorage 'ff_settings' に保存）
 ```
+
+## 設定（カスタマイズ）
+
+タイトルの「設定」ボタンから開く設定シートで以下を変更できる。値は
+`storageGet`/`storageSet` 経由で `ff_settings`（JSON）に保存。
+
+- **線の色**: `PALETTES`（pastel/vivid/candy/ocean/mono）から選択 ＋ 8 色を個別に
+  カラーピッカーで調整（個別変更時は `settings.palette='custom'`, `settings.custom=[...]`）
+- **ダークモード**: `body.dark` を切り替え（CSS 変数を上書き）
+- **クリア演出の強さ**: `--glow-bright` / `--glow-sat`（CSS 変数）で明るさ・彩度を調整
+
+`applySettings()` が COLORS/GLOSS・テーマ・演出変数へ反映し、必要なら盤面を再描画する。
+`buildSettingsUI()` が設定シートの中身を構築する。
 
 ## 主要な関数
 
