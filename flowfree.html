@@ -238,18 +238,21 @@ body{
 @keyframes hintPulse{0%,100%{box-shadow:none;}50%{box-shadow:0 0 0 3px rgba(212,130,106,.45);}}
 
 /* ===== クリアポップアップ ===== */
+/* 盤面の光が見え続けるよう、暗転・ぼかしなしで下からシート表示 */
 .clear-popup{
-  position:fixed;inset:0;background:rgba(40,20,10,.35);
-  display:none;align-items:center;justify-content:center;
-  z-index:80;backdrop-filter:blur(6px);
+  position:fixed;inset:0;
+  background:linear-gradient(to top,rgba(40,20,10,.22),rgba(40,20,10,0) 42%);
+  display:none;align-items:flex-end;justify-content:center;
+  z-index:80;
 }
 .clear-popup.show{display:flex;animation:fadeIn .25s;}
 .clear-card{
-  background:var(--surface);border-radius:20px;
-  padding:28px 24px;text-align:center;
-  box-shadow:var(--shadow-lg);border:1.5px solid var(--border);
-  max-width:280px;width:90%;
-  animation:rise .35s cubic-bezier(.2,1.4,.4,1);
+  background:var(--surface);border-radius:20px 20px 0 0;
+  padding:22px 24px 36px;text-align:center;
+  box-shadow:0 -4px 32px rgba(100,60,40,.18);
+  border-top:1.5px solid var(--border);
+  width:100%;max-width:480px;
+  animation:slideUp .3s cubic-bezier(.2,1.2,.4,1);
 }
 .clear-badge{
   display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;
@@ -531,6 +534,7 @@ function showStageSheet(lvIdx){
 }
 
 function showTitle(){
+  stopFlowLoop();
   titleScreen.classList.add('active');
   gameScreen.classList.remove('active');
   clearPopup.classList.remove('show');
@@ -598,6 +602,7 @@ function generateInfinite(){
 }
 
 function prepareStage(){
+  stopFlowLoop();
   const lv=LEVELS[curLevel];
   let s;
   if(lv.infinite){
@@ -673,6 +678,7 @@ function stopTimer(){
 
 // ===== リセット =====
 function resetStage(){
+  stopFlowLoop();
   paths=pairs.map(()=>[]);
   grid=Array.from({length:N},()=>Array(N).fill(-1));
   pairs.forEach((p,ci)=>{
@@ -903,12 +909,28 @@ function playFlowShine(){
   });
   return maxEnd;
 }
-// 光が流れるのを見せてからクリアポップアップを表示
+// 光の流れをループ再生（ポップアップ表示中も流れ続ける）
+let flowLoopTimer=null;
+function startFlowLoop(){
+  stopFlowLoop();
+  const cycle=playFlowShine();
+  flowLoopTimer=setInterval(playFlowShine,Math.max(cycle+450,1200));
+}
+function stopFlowLoop(){
+  if(flowLoopTimer){clearInterval(flowLoopTimer);flowLoopTimer=null;}
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+    const el=cells[r]&&cells[r][c];if(el)el.classList.remove('flow-shine');
+  }
+}
+// 光が流れるのを見せてからクリアポップアップ（下からシート）を表示
 function showClearPopupFx(){
   const dur=playFlowShine();
   // 長い線でも待ちすぎないよう上限を設ける
   const wait=Math.min(Math.max(dur*0.65,500),1100);
-  setTimeout(()=>clearPopup.classList.add('show'),wait);
+  setTimeout(()=>{
+    clearPopup.classList.add('show');
+    startFlowLoop();   // 表示後もループで流し続ける
+  },wait);
 }
 
 // ===== クリア =====
