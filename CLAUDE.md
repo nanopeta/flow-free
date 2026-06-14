@@ -2,6 +2,22 @@
 
 このリポジトリで作業する際のガイド。
 
+## 開発・確認の進め方（重要）
+
+オーナーは**スマホのみで開発・確認**している。差分（コード）ではなく
+**動く実物で確認する**ことが前提。これに合わせて以下のルールで進める。
+
+- **変更は `main` ブランチに直接コミット＆push する**（機能ごとの PR は作らない）。
+  スマホではブランチの HTML をプレビューできず、マージしないと確認できないため。
+- 確認は **GitHub Pages の公開 URL** で行う:
+  `https://nanopeta.github.io/flow-free/`
+  push するたびに最新版がこの URL に反映される。
+- ルート URL は `index.html`（`flowfree.html` への自動転送）経由で開く。
+  ゲーム本体は引き続き `flowfree.html` を編集する（`index.html` は転送のみ・変更不要）。
+- 気に入らなければ後から戻せばよい（履歴は残る）。レビュー前提の慎重な PR 運用は不要。
+- GitHub Pages の有効化はコード/API からはできないため、オーナーがリポジトリ設定で
+  一度だけ行う（Settings → Pages → Source: Deploy from a branch → `main` / root）。
+
 ## プロジェクト概要
 
 `flowfree.html` 単体で完結する Flow Free パズルゲーム。
