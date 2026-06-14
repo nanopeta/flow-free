@@ -32,6 +32,18 @@ Android などのモバイルブラウザでの動作を想定しています。
 - ヒント機能（正解経路をハイライト）
 - 問題の再作成（バックトラック付きランダムウォークで解の保証された問題を生成）
 
+## 公開（GitHub Pages）
+
+`main` ブランチを GitHub Pages で配信すると、push するたびに最新版が公開 URL で
+遊べるようになります（スマホからの動作確認に便利）。
+
+- 公開 URL: `https://nanopeta.github.io/flow-free/`
+- ルート URL を開くと `index.html` 経由で `flowfree.html` に自動転送されます
+
+有効化（リポジトリ設定で 1 回だけ）:
+**Settings → Pages → Build and deployment → Source: "Deploy from a branch" →
+Branch: `main` / `/ (root)` → Save**
+
 ## 開発
 
 ビルド工程はありません。`flowfree.html` を直接編集してブラウザで開くだけで確認できます。
