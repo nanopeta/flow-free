@@ -276,19 +276,13 @@ body{
 @keyframes rise{from{transform:translateY(16px) scale(.96);opacity:0}to{transform:none;opacity:1}}
 
 /* ===== クリア演出（つないだ線に光が流れる） ===== */
-/* 線(SVG)のシルエット外縁を、太く光らせる（パネルの四角ではなく線の形に沿う） */
+/* 線(SVG)が明るく光り、縁にうっすら光沢が乗る（線の形に沿う） */
 .cell.flow-shine{z-index:3;overflow:visible;}
 .cell.flow-shine svg{animation:flowGlow .6s ease;}
 @keyframes flowGlow{
-  0%{filter:drop-shadow(0 0 0 var(--deep,#fff));}
-  40%{filter:
-    drop-shadow(0 0 2px var(--gloss,#fff))
-    drop-shadow(0 0 3px var(--gloss,#fff))
-    drop-shadow(0 0 6px var(--gloss,#fff))
-    drop-shadow(0 0 10px var(--deep,#fff))
-    drop-shadow(0 0 15px var(--deep,#fff));
-  }
-  100%{filter:drop-shadow(0 0 0 var(--deep,#fff));}
+  0%{filter:brightness(1);}
+  40%{filter:brightness(1.45) saturate(1.15) drop-shadow(0 0 2px var(--gloss,#fff));}
+  100%{filter:brightness(1);}
 }
 .clear-card{position:relative;overflow:hidden;}
 .clear-time{animation:timePop .5s cubic-bezier(.2,1.5,.4,1) .15s both;}
