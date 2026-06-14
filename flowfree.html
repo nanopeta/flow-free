@@ -903,40 +903,48 @@ function playBoardFlourish(){
     },(r+c)*38);
   }
 }
-// クラッカー風の紙吹雪：下の両隅から斜め上に発射し放物線で舞い落ちる
+// クラッカー風の紙吹雪：中央寄りの2カ所から左右の外側へ大きく打ち上げ、放物線で舞い落ちる
 // scale=1で控えめ、2で盛大
 function spawnConfetti(scale){
   const layer=document.createElement('div');
   layer.className='confetti-layer';
-  const n=Math.min(160,Math.round((40+N*3)*(scale||1)));
+  const n=Math.min(260,Math.round((90+N*5)*(scale||1)));
   for(let i=0;i<n;i++){
-    const fromLeft=i%2===0;            // 左右の隅から交互に発射
+    const fromLeft=i%2===0;            // 中央寄りの左右2カ所から交互に発射
     const outer=document.createElement('div');
     outer.className='confetti';
-    const w=6+Math.random()*7;
-    outer.style.width=w+'px';
-    outer.style.height=(w+Math.random()*8)+'px';
-    outer.style.bottom='7%';
-    outer.style[fromLeft?'left':'right']='6%';
-    const dur=1.5+Math.random()*1.0;
-    const delay=(Math.random()*0.16)+'s';   // 一斉に「パンッ」と発射
-    const spread=18+Math.random()*62;       // 横の飛距離(vw)
-    outer.style.setProperty('--dx',(fromLeft?spread:-spread)+'vw');
+    // 形：紙片（四角/丸）とテープ状（細長）を混在
+    const streamer=Math.random()<0.3;
+    if(streamer){
+      outer.style.width=(4+Math.random()*3)+'px';
+      outer.style.height=(16+Math.random()*12)+'px';
+    } else {
+      const w=8+Math.random()*8;
+      outer.style.width=w+'px';
+      outer.style.height=(w+Math.random()*6)+'px';
+    }
+    outer.style.bottom='10%';
+    outer.style[fromLeft?'left':'right']='30%';   // 中央寄りの発射口
+    const dur=1.7+Math.random()*1.3;
+    const delay=(Math.random()*0.12)+'s';          // 一斉に「パンッ」と発射
+    // 外側へ大きく扇状に広がる（一部は中央寄りで高く上がる）
+    const spread=12+Math.random()*78;             // 横の飛距離(vw)
+    outer.style.setProperty('--dx',(fromLeft?-spread:spread)+'vw');
     outer.style.setProperty('--dur',dur+'s');
     outer.style.setProperty('--delay',delay);
     const inner=document.createElement('i');
     inner.style.background=COLORS[Math.floor(Math.random()*COLORS.length)];
-    inner.style.borderRadius=Math.random()<0.35?'50%':'2px';
-    inner.style.setProperty('--peak',(-(34+Math.random()*42))+'vh'); // 上昇の頂点
-    inner.style.setProperty('--fall',(16+Math.random()*46)+'vh');    // 落下先(画面下へ)
-    inner.style.setProperty('--rot',(Math.random()*960-480)+'deg');
+    inner.style.borderRadius=streamer?'2px':(Math.random()<0.4?'50%':'2px');
+    inner.style.setProperty('--peak',(-(48+Math.random()*42))+'vh'); // 高く打ち上げる
+    inner.style.setProperty('--fall',(18+Math.random()*48)+'vh');    // 落下先(画面下へ)
+    inner.style.setProperty('--rot',(Math.random()*1080-540)+'deg');
     inner.style.setProperty('--dur',dur+'s');
     inner.style.setProperty('--delay',delay);
     outer.appendChild(inner);
     layer.appendChild(outer);
   }
   document.body.appendChild(layer);
-  setTimeout(()=>layer.remove(),3600);
+  setTimeout(()=>layer.remove(),4200);
 }
 // 盤面の演出を見せてからポップアップ＋紙吹雪
 function showClearPopupFx(big){
